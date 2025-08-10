@@ -33,7 +33,6 @@ services:
   redis:
     image: redis:7-alpine
     container_name: sac_redis
-    # internal only (avoid port conflicts)
     ports: []
     restart: unless-stopped
 
@@ -47,15 +46,6 @@ services:
     volumes:
       - sac_pg:/var/lib/postgresql/data
     ports: []
-    restart: unless-stopped
-
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: sac_tunnel
-    command: tunnel --no-autoupdate run
-    environment:
-      TUNNEL_TOKEN: ${CF_TUNNEL_TOKEN}
-    depends_on: [api]
     restart: unless-stopped
 
 volumes:

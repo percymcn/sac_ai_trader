@@ -13,20 +13,15 @@ class Settings(BaseSettings):
     CELERY_BROKER_URL: AnyUrl = "redis://redis:6379/0"
     CELERY_RESULT_BACKEND: AnyUrl = "redis://redis:6379/1"
 
-    # Cloudflare
     PUBLIC_HOST: str = "http://localhost:8000"
-
-    # Providers
     ALPHA_VANTAGE_KEY: str = ""
     POLYGON_API_KEY: str = ""
 
-    # Brokers
-    TL_API_KEY: str = ""   # your hub API key (X-API-Key)
+    TL_API_KEY: str = ""
     TL_ACCOUNT_ID: str = "live_1"
     TL_HUB_WEBHOOK_SECRET: str = "change_me_webhook_secret"
     MT5_BRIDGE_URL: str = ""
 
-    # Risk
     MAX_GLOBAL_DRAWDOWN_PCT: float = 20.0
     VOL_TARGET_ANNUAL: float = 0.20
     KELLY_FRACTION: float = 0.25
