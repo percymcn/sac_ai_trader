@@ -1,0 +1,17 @@
+services:
+  api:
+    # Give predictable aliases so cloudflared can reach it by "api" or "sac_api"
+    networks:
+      default:
+        aliases: [api, sac_api]
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: sac_tunnel
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: ${CF_TUNNEL_TOKEN}
+    volumes:
+      - ./cloudflared:/etc/cloudflared:ro
+    depends_on: [api]
+    restart: unless-stopped

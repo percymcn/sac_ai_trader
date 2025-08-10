@@ -1,0 +1,4 @@
+ingress:
+  - hostname: ai.securepharma.net
+    service: http://api:8000
+  - service: http_status:404
