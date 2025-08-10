@@ -4,7 +4,40 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.routers import health, orders, positions, models, risk, signals, backtest, metrics
 from app.core.config import settings
 
-app = FastAPI(title=settings.API_TITLE if hasattr(settings,'API_TITLE') else "SAC AI Trader")
+app = FastAPI(title=settings.API_TITLE if hasattr(settings,'API_TITLE')
+
+# --- CORS (Base44 + local) ---
+from app.core.config import settings
+origins_extra = [o.strip() for o in (getattr(settings,'CORS_EXTRA_ORIGINS','') or '').split(',') if o.strip()]
+origin_regex = getattr(settings,'CORS_ALLOW_ORIGIN_REGEX', '')
+if origin_regex:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=origin_regex,
+        allow_credentials=True,
+        allow_methods=['*'],
+        allow_headers=['*']
+    )
+    # also allow a few exact extras (your own domain/local dev)
+    if origins_extra:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins_extra,
+            allow_credentials=True,
+            allow_methods=['*'],
+            allow_headers=['*']
+        )
+else:
+    # fallback to explicit list only
+    if origins_extra:
+        app.add_middleware(
+            CORSMiddleware,
+            allow_origins=origins_extra,
+            allow_credentials=True,
+            allow_methods=['*'],
+            allow_headers=['*']
+        )
+ else "SAC AI Trader")
 
 # CORS (origins configured via .env CORS_ALLOW_ORIGINS)
 origins = [o.strip() for o in (getattr(settings, 'CORS_ALLOW_ORIGINS', '') or '').split(',') if o.strip()]
