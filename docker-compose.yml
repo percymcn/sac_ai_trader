@@ -1,3 +1,4 @@
+version: "3.9"
 services:
   api:
     build: .
@@ -5,37 +6,14 @@ services:
     command: uvicorn app.api.main:app --host 0.0.0.0 --port 8000 --proxy-headers --log-level info
     env_file: .env
     depends_on: [db, redis]
-    volumes: [".:/code"]
     working_dir: /code
+    volumes: [".:/code"]
     ports: ["8010:8000"]
-    restart: unless-stopped
-
-  worker:
-    build: .
-    container_name: sac_worker
-    environment:
-      CELERY_IMPORTS: app.tasks.ingest,app.tasks.retrain,app.tasks.walkforward,app.tasks.trade_exec,app.tasks.monitor
-    command: celery -A app.core.celery_app.celery_app worker -Q default,ingest,retrain,exec,monitor -l INFO --concurrency=2
-    env_file: .env
-    depends_on: [api, redis, db]
-    volumes: [".:/code"]
-    working_dir: /code
-    restart: unless-stopped
-
-  beat:
-    build: .
-    container_name: sac_beat
-    command: celery -A app.core.celery_app.celery_app beat -l INFO
-    env_file: .env
-    depends_on: [worker, redis, db]
-    volumes: [".:/code"]
-    working_dir: /code
     restart: unless-stopped
 
   redis:
     image: redis:7-alpine
     container_name: sac_redis
-    ports: []
     restart: unless-stopped
 
   db:
@@ -45,9 +23,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASS}
       POSTGRES_DB: ${DB_NAME}
-    volumes:
-      - sac_pg:/var/lib/postgresql/data
-    ports: []
+    volumes: [ "sac_pg:/var/lib/postgresql/data" ]
     restart: unless-stopped
 
 volumes:
