@@ -1,8 +1,10 @@
-import torch, pandas as pd
+import pandas as pd
 from app.ml.features import make_features
 from app.ml.datasets import TCN
 from app.ml.registry import load_latest
+
 def predict_proba_torch(df: pd.DataFrame)->float:
+    import torch  # lazy import
     pkg=load_latest()
     if not pkg or not isinstance(pkg.get("model"), dict): return 0.5
     state=pkg["model"]; meta=pkg.get("meta",{}); win=int(meta.get("win",64))

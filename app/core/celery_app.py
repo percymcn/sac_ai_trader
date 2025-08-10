@@ -3,15 +3,8 @@ from app.core.config import settings
 
 celery_app = Celery(
     "sac_ai_trader",
-    broker=settings.CELERY_BROKER_URL,
-    backend=settings.CELERY_RESULT_BACKEND,
-    include=[
-        "app.tasks.ingest",
-        "app.tasks.retrain",
-        "app.tasks.walkforward",
-        "app.tasks.trade_exec",
-        "app.tasks.monitor",
-    ],
+    broker=str(settings.CELERY_BROKER_URL),
+    backend=str(settings.CELERY_RESULT_BACKEND),
 )
 celery_app.conf.timezone = "UTC"
 celery_app.conf.beat_schedule = {

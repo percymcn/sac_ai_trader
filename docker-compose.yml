@@ -13,6 +13,8 @@ services:
   worker:
     build: .
     container_name: sac_worker
+    environment:
+      CELERY_IMPORTS: app.tasks.ingest,app.tasks.retrain,app.tasks.walkforward,app.tasks.trade_exec,app.tasks.monitor
     command: celery -A app.core.celery_app.celery_app worker -Q default,ingest,retrain,exec,monitor -l INFO --concurrency=2
     env_file: .env
     depends_on: [api, redis, db]

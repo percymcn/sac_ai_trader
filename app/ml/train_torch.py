@@ -1,13 +1,17 @@
-import optuna, torch, pandas as pd
+import pandas as pd
 from app.ml.features import make_features
 from app.ml.datasets import WindowDataset, TCN
 from app.ml.registry import save_model
+
 DEVICE="cpu"
+
 def _prep(df: pd.DataFrame):
     feats=make_features(df); y=(df["close"].shift(-1)>df["close"]).astype(int).fillna(0)
     feats,y=feats.iloc[50:], y.iloc[50:]; return feats,y
+
 def _fit_once(X: pd.DataFrame, y, params: dict, win:int=64, epochs:int=12):
-    ds=WindowDataset(X,y,win); 
+    import torch  # lazy
+    ds=WindowDataset(X,y,win)
     if len(ds)<100: return 0.5, None
     loader=torch.utils.data.DataLoader(ds, batch_size=params["batch"], shuffle=False)
     model=TCN(n_feat=X.shape[1], hidden=params["hidden"]).to(DEVICE)
@@ -25,7 +29,9 @@ def _fit_once(X: pd.DataFrame, y, params: dict, win:int=64, epochs:int=12):
             pred=torch.argmax(model(xb),dim=1).item()
             correct+=int(pred==_y.item()); total+=1
     return (correct/max(1,total)), model
+
 def train_optuna(df: pd.DataFrame, n_trials:int=12, win:int=64):
+    import optuna  # lazy
     X,y=_prep(df)
     def obj(trial):
         params={"hidden":trial.suggest_categorical("hidden",[16,32,64,96]),
