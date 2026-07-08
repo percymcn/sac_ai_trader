@@ -16,6 +16,13 @@ on:
         description: "Push to platform repo after checks pass (false = dry run)"
         required: false
         default: "true"
+  push:
+    branches:
+      - claude/saas-product-rebuild-sy45qb
+    paths:
+      - "flxio-vision/**"
+      - ".github/workflows/platform-sync.yml"
+      - ".deploy-trigger"
 
 permissions:
   contents: read
