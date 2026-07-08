@@ -117,16 +117,27 @@ def main() -> None:
     migrations = platform_app / "migrations"
     ours = migrations / "0001_flxio_core.sql"
     if migrations.is_dir() and ours.exists():
-        others = [p for p in migrations.glob("[0-9]*.sql") if p.name != ours.name]
-        taken = {p.name.split("_")[0] for p in others}
-        if "0001" in taken:
-            nums = [int(p.name.split("_")[0]) for p in migrations.glob("[0-9]*.sql")]
-            nxt = max(nums) + 1
-            new_name = migrations / f"{nxt:04d}_flxio_core.sql"
-            ours.rename(new_name)
-            print(f"migration renumbered -> {new_name.name}")
+        # If a previous overlay already installed our migration under another
+        # number, update THAT file in place instead of adding a new copy.
+        existing = sorted(p for p in migrations.glob("[0-9]*_flxio_core.sql") if p.name != ours.name)
+        if existing:
+            existing[0].write_text(ours.read_text())
+            ours.unlink()
+            for dup in existing[1:]:
+                dup.unlink()
+                print(f"removed duplicate migration {dup.name}")
+            print(f"migration updated in place -> {existing[0].name}")
         else:
-            print("migration kept as 0001_flxio_core.sql")
+            others = [p for p in migrations.glob("[0-9]*.sql") if p.name != ours.name]
+            taken = {p.name.split("_")[0] for p in others}
+            if "0001" in taken:
+                nums = [int(p.name.split("_")[0]) for p in migrations.glob("[0-9]*.sql")]
+                nxt = max(nums) + 1
+                new_name = migrations / f"{nxt:04d}_flxio_core.sql"
+                ours.rename(new_name)
+                print(f"migration renumbered -> {new_name.name}")
+            else:
+                print("migration kept as 0001_flxio_core.sql")
 
     # 4. Patch __root.tsx meta. NON-FATAL: every route sets its own head()/meta
     # via buildHead, so if the template shape differs we warn and keep going —
