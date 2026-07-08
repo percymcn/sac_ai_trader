@@ -8,6 +8,7 @@ interface HeadInput {
   ogImage?: string
   ogType?: 'website' | 'article'
   noindex?: boolean
+  robots?: string
   article?: { publishedTime: string; author: string; section: string }
 }
 
@@ -19,7 +20,7 @@ export function buildHead(input: HeadInput) {
   const meta: Record<string, string>[] = [
     { title: input.title },
     { name: 'description', content: input.description },
-    { name: 'robots', content: input.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large' },
+    { name: 'robots', content: input.robots ?? (input.noindex ? 'noindex, nofollow' : 'index, follow, max-image-preview:large') },
     { property: 'og:type', content: input.ogType ?? 'website' },
     { property: 'og:title', content: input.title },
     { property: 'og:description', content: input.description },
