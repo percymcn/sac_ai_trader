@@ -49,8 +49,21 @@ jobs:
           python3 ovl/flxio-vision/scripts/ci-overlay.py ovl/flxio-vision/app platform/app
           echo "::endgroup::"
 
-          echo "::group::typecheck"
-          ( cd platform/app && bun install && (bun run typecheck || echo "::warning::typecheck reported issues — deploying anyway; review logs") )
+          echo "::group::install"
+          ( cd platform/app && bun install )
+          echo "::endgroup::"
+
+          echo "::group::regenerate routeTree.gen.ts (tanstackStart vite plugin) — runs before tsc so the route tree includes the new routes"
+          # `build` is `tsc --noEmit && vite build`; tsc would fail on the stale
+          # route tree, so run vite directly to (re)generate src/routeTree.gen.ts,
+          # then commit it. Even if the later build step errors, the tree is written.
+          ( cd platform/app && bunx vite build 2>&1 | tail -20 ) || echo "::warning::vite build reported issues (route tree regenerated regardless)"
+          rm -rf platform/app/dist
+          echo "regenerated routeTree.gen.ts:"; wc -l platform/app/src/routeTree.gen.ts || true
+          echo "::endgroup::"
+
+          echo "::group::typecheck against the fresh route tree"
+          ( cd platform/app && bun run typecheck 2>&1 | tail -60 ) || echo "::warning::typecheck still reports issues (see above)"
           echo "::endgroup::"
 
           echo "::group::commit + push to platform main"

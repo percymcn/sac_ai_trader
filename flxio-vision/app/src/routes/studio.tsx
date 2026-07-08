@@ -326,7 +326,10 @@ function ShareDialog({
   }
 
   return (
-    <Modal open={Boolean(target)} onOpenChange={open => !open && onClose()} title="Publish share page">
+    <Modal.Root open={Boolean(target)} onOpenChange={(open: boolean) => !open && onClose()}>
+      <Modal.Content>
+        <Modal.Header title="Publish share page" />
+        <Modal.Body>
       <div className="grid gap-4">
         <p className="text-q-body-sm-regular text-q-text-secondary">
           Publishing creates a permanent public page at {absUrl('/r/…')} with your shot, its recipe, and a
@@ -346,7 +349,9 @@ function ShareDialog({
           </Button>
         </div>
       </div>
-    </Modal>
+        </Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
   )
 }
 
@@ -408,7 +413,10 @@ function BoardDialog({ target, onClose }: { target: ResultCardData | null; onClo
   }
 
   return (
-    <Modal open={Boolean(target)} onOpenChange={open => !open && onClose()} title="Add to board">
+    <Modal.Root open={Boolean(target)} onOpenChange={(open: boolean) => !open && onClose()}>
+      <Modal.Content>
+        <Modal.Header title="Add to board" />
+        <Modal.Body>
       <div className="grid gap-4">
         {boards.length > 0 ? (
           <div className="grid gap-2">
@@ -431,6 +439,8 @@ function BoardDialog({ target, onClose }: { target: ResultCardData | null; onClo
           </Button>
         </div>
       </div>
-    </Modal>
+        </Modal.Body>
+      </Modal.Content>
+    </Modal.Root>
   )
 }

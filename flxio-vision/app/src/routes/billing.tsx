@@ -185,7 +185,10 @@ function BillingPage() {
         )}
       </div>
 
-      <Modal open={confirmCancel} onOpenChange={setConfirmCancel} title="Cancel subscription?">
+      <Modal.Root open={confirmCancel} onOpenChange={setConfirmCancel}>
+        <Modal.Content>
+          <Modal.Header title="Cancel subscription?" />
+          <Modal.Body>
         <div className="grid gap-4">
           <p className="text-q-body-sm-regular text-q-text-secondary">
             You’ll keep Free-plan access to the full studio and every engine. Batch mode, the full
@@ -200,7 +203,9 @@ function BillingPage() {
             </Button>
           </div>
         </div>
-      </Modal>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
     </PublicPage>
   )
 }

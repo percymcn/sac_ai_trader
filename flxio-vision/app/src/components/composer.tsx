@@ -419,11 +419,10 @@ export function Composer({
         )}
       </div>
 
-      <Modal
-        open={confirmOpen}
-        onOpenChange={setConfirmOpen}
-        title="Confirm generation"
-      >
+      <Modal.Root open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <Modal.Content>
+          <Modal.Header title="Confirm generation" />
+          <Modal.Body>
         <div className="grid gap-4">
           <dl className="grid gap-2 text-q-body-sm-regular">
             <div className="flex justify-between gap-4">
@@ -469,7 +468,9 @@ export function Composer({
             </Button>
           </div>
         </div>
-      </Modal>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
     </section>
   )
 }

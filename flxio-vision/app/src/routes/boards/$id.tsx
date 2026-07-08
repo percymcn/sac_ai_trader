@@ -145,7 +145,10 @@ function BoardDetailPage() {
         )}
       </div>
 
-      <Modal open={confirmDelete} onOpenChange={setConfirmDelete} title="Delete this board?">
+      <Modal.Root open={confirmDelete} onOpenChange={setConfirmDelete}>
+        <Modal.Content>
+          <Modal.Header title="Delete this board?" />
+          <Modal.Body>
         <div className="grid gap-4">
           <p className="text-q-body-sm-regular text-q-text-secondary">
             This removes the board and its saved references. Your generations themselves stay in your
@@ -169,7 +172,9 @@ function BoardDetailPage() {
             </Button>
           </div>
         </div>
-      </Modal>
+          </Modal.Body>
+        </Modal.Content>
+      </Modal.Root>
     </PublicPage>
   )
 }
