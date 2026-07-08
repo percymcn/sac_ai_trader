@@ -1,0 +1,26 @@
+name: probe
+on:
+  push:
+    paths:
+      - ".github/workflows/probe.yml"
+  workflow_dispatch: {}
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect platform template
+        env:
+          TOKEN: ${{ secrets.PLATFORM_TOKEN }}
+        run: |
+          set -e
+          git -c http.extraHeader="Authorization: token ${TOKEN}" clone --depth 1 "https://apps-repos.higgsfield.ai/hfu-user3EBuQb4r6RDvs1kC4Tr4FwmRtWL/flxiovision-39028a4b-2ab6-4c44-aacd-835176a0c151.git" p
+          echo "======== package.json scripts ========"
+          python3 -c "import json;print(json.dumps(json.load(open('p/app/package.json')).get('scripts',{}),indent=2))"
+          echo "======== vite/tsr config (route generation) ========"
+          for f in p/app/vite.config.ts p/app/vite.config.js p/app/tsr.config.json p/app/app.config.ts; do [ -f "$f" ] && { echo "--- $f ---"; head -80 "$f"; }; done
+          echo "======== does routeTree.gen.ts exist and how big ========"
+          wc -l p/app/src/routeTree.gen.ts 2>/dev/null || echo "no routeTree.gen.ts"
+          echo "======== Quanta Modal API ========"
+          awk '/Modal/{p=1} p{print} /^## /{if(p && !/Modal/)exit}' p/app/packages/quanta/ai/AGENTS.md | grep -i -A60 modal | head -90
+          echo "======== Quanta Modal usage grep ========"
+          grep -rn "Modal" p/app/packages/quanta/ai/AGENTS.md | head -40
