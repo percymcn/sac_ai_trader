@@ -17,7 +17,7 @@ export function PageIntro({ eyebrow, title, lede }: { eyebrow?: string; title: s
 export function SocialProofStrip() {
   const stats = [
     { value: '9', label: 'frontier engines, one composer' },
-    { value: '36', label: 'director presets across 8 packs' },
+    { value: '37', label: 'director presets across 8 packs' },
     { value: '100%', label: 'of shots show cost before running' },
     { value: '0', label: 'model paywalls on any plan' },
   ]

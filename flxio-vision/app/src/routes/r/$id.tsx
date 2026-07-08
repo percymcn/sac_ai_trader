@@ -12,7 +12,7 @@ import { ShareButtons } from '../../components/share-buttons'
 import { StructuredData } from '../../components/structured-data'
 import { login, useCurrentUser } from '../../components/use-current-user'
 import { getShare, voteShare, type ShareRow } from '../../lib/api/shares.functions'
-import { absUrl, SITE, pageTitle } from '../../data/site'
+import { absUrl, OG_COVER_URL, SITE, pageTitle } from '../../data/site'
 import { graph, orgGraph, breadcrumbNode } from '../../lib/seo'
 import { getPreset } from '../../data/presets'
 import { getModel } from '../../data/models'
@@ -38,7 +38,7 @@ export const Route = createFileRoute('/r/$id')({
     const description = share.prompt
       ? `“${share.prompt.slice(0, 140)}” — an AI ${share.media_type} made with ${SITE.name}. Remix it with one click.`
       : `An AI ${share.media_type} made with ${SITE.name}. Remix it with one click.`
-    const ogImage = share.media_type === 'video' ? (share.thumbnail_url ?? share.preview_url ?? absUrl('/og-cover.png')) : (share.preview_url ?? share.raw_url)
+    const ogImage = share.media_type === 'video' ? (share.thumbnail_url ?? share.preview_url ?? OG_COVER_URL) : (share.preview_url ?? share.raw_url)
     const meta: Record<string, string>[] = [
       { title },
       { name: 'description', content: description },

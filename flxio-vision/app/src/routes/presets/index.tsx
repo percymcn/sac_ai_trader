@@ -31,7 +31,7 @@ export const Route = createFileRoute('/presets/')({
     buildHead({
       title: pageTitle('Director Presets — Cinematic AI Recipes'),
       description:
-        '36 director presets for AI video and images: camera moves, lighting, film looks, ad formats, social formats, portraits, worlds, and FX — each a transparent, editable recipe.',
+        '37 director presets for AI video and images: camera moves, lighting, film looks, ad formats, social formats, portraits, worlds, and FX — each a transparent, editable recipe.',
       path: '/presets',
     }),
   component: PresetsPage,

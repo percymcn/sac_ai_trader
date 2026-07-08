@@ -149,7 +149,7 @@ export const PRESETS: DirectorPreset[] = [
     name: 'Rembrandt Light',
     category: 'lighting',
     kind: 'image',
-    core: false,
+    core: true,
     modelId: 'soul_v2',
     settings: { aspectRatio: '3:4', resolution: '1k', batchSize: 1 },
     template:
@@ -202,7 +202,7 @@ export const PRESETS: DirectorPreset[] = [
     name: 'VHS Camcorder',
     category: 'film-look',
     kind: 'video',
-    core: false,
+    core: true,
     modelId: 'wan_2_7',
     settings: { duration: 5, aspectRatio: '16:9', resolution: '480p', batchSize: 1 },
     template:
@@ -268,7 +268,7 @@ export const PRESETS: DirectorPreset[] = [
     name: 'Food Macro Pull',
     category: 'ads',
     kind: 'video',
-    core: false,
+    core: true,
     modelId: 'seedance_2_0',
     settings: { mode: 'std', duration: 5, aspectRatio: '9:16', resolution: '720p', batchSize: 1 },
     template:
@@ -334,7 +334,7 @@ export const PRESETS: DirectorPreset[] = [
     name: 'Satisfying Loop',
     category: 'social',
     kind: 'video',
-    core: false,
+    core: true,
     modelId: 'wan_2_7',
     settings: { duration: 5, aspectRatio: '9:16', resolution: '720p', batchSize: 1 },
     template:
@@ -374,7 +374,7 @@ export const PRESETS: DirectorPreset[] = [
     name: 'Character Sheet',
     category: 'portrait',
     kind: 'image',
-    core: false,
+    core: true,
     modelId: 'nano_banana_2',
     settings: { aspectRatio: '16:9', resolution: '1k', batchSize: 1 },
     template:
@@ -427,7 +427,7 @@ export const PRESETS: DirectorPreset[] = [
     name: 'Cozy Interior',
     category: 'world',
     kind: 'image',
-    core: false,
+    core: true,
     modelId: 'seedream_v4_5',
     settings: { aspectRatio: '4:3', resolution: '1k', batchSize: 1 },
     template:
@@ -480,7 +480,7 @@ export const PRESETS: DirectorPreset[] = [
     name: 'Pixel Art',
     category: 'fx',
     kind: 'image',
-    core: false,
+    core: true,
     modelId: 'gpt_image_2',
     settings: { aspectRatio: '16:9', quality: 'high', resolution: '1k', batchSize: 1 },
     template:

@@ -73,7 +73,7 @@ function AboutPage() {
           <p className="text-q-body-md-regular text-q-text-secondary">
             A cinematic AI studio over nine frontier engines — Seedance 2.0, Kling 3.0, Veo 3.1 Lite,
             Wan 2.7, Grok Imagine for video; GPT Image 2, Nano Banana 2, Seedream 4.5, Soul V2 for
-            images — with 36 director presets, live cost previews, boards, batch mode, remix, and a
+            images — with 37 director presets, live cost previews, boards, batch mode, remix, and a
             community gallery. It runs entirely in the browser, renders on the edge, and starts free.
           </p>
           <p className="text-q-body-md-regular text-q-text-secondary">

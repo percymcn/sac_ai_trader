@@ -30,7 +30,7 @@ const FLXIO_COLUMN = {
   freeTier: 'Full studio, every engine, 20 presets',
   engines: '9 frontier engines (video + image)',
   costPreview: 'Exact cost shown before every shot',
-  presets: '36 transparent director presets',
+  presets: '37 transparent director presets',
   workflow: 'Boards, remix, batch, history',
   sharing: 'Permanent share pages + gallery',
 }

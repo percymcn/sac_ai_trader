@@ -15,6 +15,10 @@ export const SITE = {
   author: 'FlxioAI Vision Team',
 } as const
 
+/** Branded 3:2 launch cover — default OG image site-wide. */
+export const OG_COVER_URL =
+  'https://d8j0ntlcm91z4.cloudfront.net/user_3EBuQb4r6RDvs1kC4Tr4FwmRtWL/hf_20260708_022417_5ce9333d-a1e1-4639-9a8d-89e321230572.png'
+
 export function absUrl(path: string): string {
   if (path === '/' || path === '') return SITE.url
   return `${SITE.url}${path.startsWith('/') ? path : `/${path}`}`

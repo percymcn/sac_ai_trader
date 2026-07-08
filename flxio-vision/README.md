@@ -16,7 +16,7 @@ design system, Sign in with Higgsfield, fnf generation SDK).
   Nano Banana 2, Seedream 4.5, Soul V2), live credit **cost preview inside the
   generate button**, confirmation gate, image-to-video reference upload,
   polling feed, remix, plan-gated **batch mode**.
-- **Director presets** (36, in 8 packs) — transparent prompt recipes with
+- **Director presets** (37, in 8 packs) — transparent prompt recipes with
   tuned engine + settings; 20 free, all on Pro.
 - **Boards** — project collections; **history** enriched with full recipes.
 - **Viral loop** — permanent indexable `/r/[id]` share pages with per-result

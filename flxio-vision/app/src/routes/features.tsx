@@ -19,7 +19,7 @@ const FEATURES: { title: string; body: string; to: string; linkLabel: string }[]
     linkLabel: 'How pricing works',
   },
   {
-    title: '36 director presets',
+    title: '37 director presets',
     body: 'Camera moves, lighting setups, film looks, ad formats, social formats, portraits, worlds, and FX — each a transparent prompt recipe with the right engine and settings pre-tuned. Type a subject, get a cinematic shot.',
     to: '/presets',
     linkLabel: 'Browse presets',
@@ -76,7 +76,7 @@ export const Route = createFileRoute('/features')({
     buildHead({
       title: pageTitle('Features'),
       description:
-        'Every FlxioAI Vision feature: multi-engine composer, live cost preview, 36 director presets, remix, batch mode, boards, share pages, and a community gallery.',
+        'Every FlxioAI Vision feature: multi-engine composer, live cost preview, 37 director presets, remix, batch mode, boards, share pages, and a community gallery.',
       path: '/features',
     }),
   component: FeaturesPage,

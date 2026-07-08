@@ -1,5 +1,5 @@
 // SEO helpers: per-route head() builders and JSON-LD graphs.
-import { SITE, absUrl } from '../data/site'
+import { SITE, absUrl, OG_COVER_URL } from '../data/site'
 
 interface HeadInput {
   title: string
@@ -12,7 +12,7 @@ interface HeadInput {
   article?: { publishedTime: string; author: string; section: string }
 }
 
-const DEFAULT_OG = absUrl('/og-cover.png')
+const DEFAULT_OG = OG_COVER_URL
 
 export function buildHead(input: HeadInput) {
   const url = absUrl(input.path)
@@ -126,7 +126,7 @@ export function articleNode(opts: {
     url: absUrl(opts.path),
     datePublished: opts.date,
     dateModified: opts.date,
-    image: opts.image ?? absUrl('/og-cover.png'),
+    image: opts.image ?? OG_COVER_URL,
     author: { '@type': 'Organization', name: opts.author, url: SITE.url },
     publisher: { '@id': ORG_ID },
     mainEntityOfPage: absUrl(opts.path),

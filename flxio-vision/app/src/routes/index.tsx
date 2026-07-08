@@ -34,7 +34,7 @@ function HomePage() {
           </h1>
           <p className="text-q-body-md-regular text-q-text-secondary">
             {SITE.name} is an AI video and image generator with the best frontier engines — Seedance 2.0,
-            Kling 3.0, Veo 3.1 Lite, GPT Image 2 and more — wrapped in 36 director presets, a live credit
+            Kling 3.0, Veo 3.1 Lite, GPT Image 2 and more — wrapped in 37 director presets, a live credit
             cost preview on every shot, boards, remix, batch mode, and shareable public results.
           </p>
         </div>
@@ -75,7 +75,7 @@ function HomePage() {
         <FeatureRow
           flip
           title="Director presets: cinematography as a recipe"
-          body="Dolly-ins, neon noir, 35mm film, product hero spins — 36 presets across 8 packs encode professional prompt craft. Unlike effect buttons, every preset is a transparent recipe you can read, edit, and learn from."
+          body="Dolly-ins, neon noir, 35mm film, product hero spins — 37 presets across 8 packs encode professional prompt craft. Unlike effect buttons, every preset is a transparent recipe you can read, edit, and learn from."
           points={[
             'Camera moves, lighting, film looks, ads, social, portraits, worlds, FX',
             'Each preset picks the right engine and settings automatically',
