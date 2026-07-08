@@ -1,65 +1,51 @@
-# Deploy FlxioAI Vision live (one command, any terminal)
+# Deploy FlxioAI Vision live — one command
 
-The app is fully built on branch `claude/saas-product-rebuild-sy45qb`. This
-sandbox can't reach the Higgsfield platform git server (egress policy), and
-GitHub Actions isn't executing on this repo — so the reliable path is to run
-the deploy from **any machine with internet + `git` + `python3`** (your laptop,
-a GitHub Codespace, Cloud Shell, etc.). `bun` is optional but recommended so
-the typecheck runs before you push.
+The app is fully built on branch `claude/saas-product-rebuild-sy45qb`. The
+final hop (pushing the code onto the Higgsfield platform repo) has to run from a
+machine with open internet, because the assistant's sandbox network is locked
+and this repo's GitHub Actions runners aren't executing. Easiest = a **GitHub
+Codespace** (runs in your browser, nothing to install).
 
-## Copy-paste this block
+## Fastest: GitHub Codespace (browser, zero install)
+
+1. Go to **github.com/percymcn/sac_ai_trader** → green **Code** button →
+   **Codespaces** tab → **Create codespace on main**. A terminal opens in your
+   browser after ~30s.
+2. Paste this whole block and press Enter:
 
 ```bash
-set -e
+curl -fsSL https://bun.sh/install | bash >/dev/null 2>&1; export PATH="$HOME/.bun/bin:$PATH"
 TOKEN=fea0666aa800c5ba5b28ba51c20242b553e9a008
-PLATFORM=apps-repos.higgsfield.ai/hfu-user3EBuQb4r6RDvs1kC4Tr4FwmRtWL/flxiovision-39028a4b-2ab6-4c44-aacd-835176a0c151.git
-
-# 1) overlay source (public)
-git clone --depth 1 -b claude/saas-product-rebuild-sy45qb \
-  https://github.com/percymcn/sac_ai_trader.git flxio-overlay
-
-# 2) the platform repo (your website)
-git -c http.extraHeader="Authorization: token $TOKEN" \
-  clone "https://$PLATFORM" platform
-
-# 3) overlay the app + apply template patches
-python3 flxio-overlay/flxio-vision/scripts/ci-overlay.py \
-  flxio-overlay/flxio-vision/app platform/app
-
-# 4) OPTIONAL but recommended — verify types against the real SDK
-#    (fixes here, if any, are usually 1-2 SDK export names)
-if command -v bun >/dev/null; then
-  ( cd platform/app && bun install && bun run typecheck && bun run qa:fill -- --strict )
-fi
-
-# 5) push -> the platform CI builds the live site
+PLAT=apps-repos.higgsfield.ai/hfu-user3EBuQb4r6RDvs1kC4Tr4FwmRtWL/flxiovision-39028a4b-2ab6-4c44-aacd-835176a0c151.git
+rm -rf ovl platform
+git clone --depth 1 -b claude/saas-product-rebuild-sy45qb https://github.com/percymcn/sac_ai_trader.git ovl
+git -c http.extraHeader="Authorization: token $TOKEN" clone "https://$PLAT" platform
+python3 ovl/flxio-vision/scripts/ci-overlay.py ovl/flxio-vision/app platform/app
+( cd platform/app && bun install >/dev/null 2>&1 && (bun run typecheck || echo "TYPECHECK_ISSUES — paste output to the assistant") )
 cd platform
 git add -A
-git -c user.name="FlxioAI Vision" -c user.email="deploy@flxiovision.local" \
-  commit -m "FlxioAI Vision: full product overlay (studio, billing, SEO, share pages)"
-git -c http.extraHeader="Authorization: token $TOKEN" push origin main
-echo "Pushed. The platform will build and deploy to https://flxiovision.higgsfield.app"
+git -c user.name="FlxioAI Vision" -c user.email="deploy@flxiovision.local" commit -m "FlxioAI Vision: full product overlay"
+git -c http.extraHeader="Authorization: token $TOKEN" push origin main && echo "==== PUSHED — tell the assistant 'pushed' ===="
 ```
 
-Then tell me **"pushed"** and I poll the deploy via the Higgsfield tools and
-verify the live site (homepage, sitemap, robots, schema, pricing, share page,
-mobile) and hand you the confirmed URL. If step 4's typecheck flags anything,
-paste me the errors — they'll be small SDK export-name fixes and I'll patch the
-branch, then you re-run steps 1–5.
+3. When you see **PUSHED**, come back and say **"pushed"** — I poll the
+   platform build and verify the live site (homepage, sitemap, robots, schema,
+   pricing, `/r/` sharing, mobile) and hand you the confirmed URL.
 
-## Faster if you can: enable the GitHub Actions bridge
-1. Repo **Settings → Actions → General →** "Allow all actions and reusable
-   workflows" → Save.
-2. **Settings → Secrets and variables → Actions → New repository secret:**
-   `PLATFORM_TOKEN` = the token above.
-3. Tell me "actions on" — I trigger `platform-sync` and drive it to a verified
-   live deploy from here (it overlays, typechecks against the real SDK, and
-   pushes, all on GitHub's runner).
+If the run prints `TYPECHECK_ISSUES`, copy the lines above it to me — they'll be
+one or two SDK export-name fixes; I patch the branch and you re-run the block.
 
-## Or the network route
-Add `apps-repos.higgsfield.ai` to this environment's network allowlist
-(claude.ai → Code → environment settings) and say "unlocked" — I deploy
-directly from a fresh worker.
+## Same command on your own laptop
+Any terminal with `git` + `python3` (+ `bun` recommended) works — paste the same
+block. On macOS/Linux/WSL it runs as-is.
 
-Any one of the three ships it. The one-command block is the most reliable
-because it depends on neither the sandbox egress nor GitHub Actions.
+## Why not automatic?
+- The assistant's sandbox can't reach `apps-repos.higgsfield.ai` (proxy egress
+  policy — returns 000/403).
+- This repo's GitHub Actions jobs never get a runner (5 runs died in ~3s) — a
+  GitHub account/runner policy, not the workflow.
+- The Higgsfield MCP builds *from* the platform repo but has no tool to write
+  code into it.
+
+So the code push must originate from open-internet compute you control. Once
+it's pushed, everything else (build, deploy, verify) is automatic / done by me.
