@@ -3,6 +3,12 @@ name: platform-sync
 # pushes it to main (the platform CI then builds the live deploy).
 # Requires repo secret PLATFORM_TOKEN (scoped deploy token for the platform repo).
 
+# NOTE: this bridge only runs if GitHub Actions is ENABLED for the repo
+# (Settings -> Actions -> General -> "Allow all actions and reusable workflows")
+# AND the PLATFORM_TOKEN secret is set. It is dispatch-only to avoid failing
+# runs on every push while Actions is disabled. Once Actions is enabled and the
+# secret is added, run it from the Actions tab (needs this file on the default
+# branch) — or just deploy with scripts/../DEPLOY.md, which needs no Actions.
 on:
   workflow_dispatch:
     inputs:
@@ -10,12 +16,6 @@ on:
         description: "Push to platform repo after checks pass (false = dry run)"
         required: false
         default: "true"
-  push:
-    branches:
-      - claude/saas-product-rebuild-sy45qb
-    paths:
-      - "flxio-vision/**"
-      - ".github/workflows/platform-sync.yml"
 
 permissions:
   contents: read
