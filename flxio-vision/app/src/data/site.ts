@@ -19,6 +19,10 @@ export const SITE = {
 export const OG_COVER_URL =
   'https://d8j0ntlcm91z4.cloudfront.net/user_3EBuQb4r6RDvs1kC4Tr4FwmRtWL/hf_20260708_022417_5ce9333d-a1e1-4639-9a8d-89e321230572.png'
 
+/** Lightweight webp of the launch cover for in-page rendering. */
+export const COVER_MIN_URL =
+  'https://d8j0ntlcm91z4.cloudfront.net/user_3EBuQb4r6RDvs1kC4Tr4FwmRtWL/hf_20260708_022417_5ce9333d-a1e1-4639-9a8d-89e321230572_min.webp'
+
 export function absUrl(path: string): string {
   if (path === '/' || path === '') return SITE.url
   return `${SITE.url}${path.startsWith('/') ? path : `/${path}`}`

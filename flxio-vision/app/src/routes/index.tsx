@@ -9,7 +9,7 @@ import { FaqBlock } from '../components/faq-block'
 import { SocialProofStrip, FeatureRow, CtaBand } from '../components/marketing'
 import { buildHead, graph, orgGraph, softwareAppNode, faqNode } from '../lib/seo'
 import { HOME_FAQ } from '../data/faqs'
-import { SITE, pageTitle } from '../data/site'
+import { SITE, pageTitle, COVER_MIN_URL } from '../data/site'
 import { PRESET_CATEGORIES, PRESETS } from '../data/presets'
 import { MODELS } from '../data/models'
 import { PLANS } from '../data/plans'
@@ -135,10 +135,18 @@ function HomePage() {
           linkLabel="Explore the gallery"
           aside={
             <div className="grid gap-2 text-q-body-sm-regular text-q-text-secondary">
-              <p className="rounded-lg bg-q-background-primary p-3">
-                “Slow dolly-in on a detective studying a wall of clues…” → a permanent share page with the
-                clip, the recipe, and a make-your-own button.
-              </p>
+              <div className="overflow-hidden rounded-lg border border-q-border-subtle bg-q-background-primary">
+                <img
+                  src={COVER_MIN_URL}
+                  alt="A FlxioAI Vision share card: a cinematic film set at night with neon practical lights"
+                  loading="lazy"
+                  className="aspect-[3/2] w-full object-cover"
+                />
+                <p className="p-3">
+                  “Slow dolly-in on a detective studying a wall of clues…” → a permanent share page with
+                  the clip, the recipe, and a make-your-own button.
+                </p>
+              </div>
               <Link to="/explore" className="text-q-text-primary underline underline-offset-4">
                 See what people are making →
               </Link>
