@@ -80,6 +80,17 @@ def main() -> None:
         copied += 1
     print(f"copied {copied} overlay files")
 
+    # 1b. Remove template layouts. The starter ships src/layouts/*.tsx demo
+    # layouts that import a `.Action`-style Composer API we don't expose; they
+    # aren't referenced by any of our routes, so drop them to keep typecheck
+    # clean. Safe: our overlay never provides a layouts/ dir.
+    layouts_dir = platform_app / "src/layouts"
+    if layouts_dir.is_dir():
+        shutil.rmtree(layouts_dir, ignore_errors=True)
+        print("removed template src/layouts/ (unused demo layouts)")
+    else:
+        print("no template src/layouts/ to remove")
+
     # 2. Merge manifest.
     manifest_path = platform_app / "app.manifest.json"
     manifest = {}

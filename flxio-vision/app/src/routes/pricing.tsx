@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@higgsfield/quanta/button'
-import { Tabs } from '@higgsfield/quanta/tabs'
+import { Segmented } from '../components/field-controls'
 import { Loader } from '@higgsfield/quanta/loader'
 import { toast } from '@higgsfield/quanta/sonner'
 import CheckIcon from '@material-symbols/svg-400/outlined/check.svg?react'
@@ -87,10 +87,11 @@ function PricingPage() {
 
         <div className="grid gap-6">
           <div className="flex items-center gap-3">
-            <Tabs
+            <Segmented
+              ariaLabel="Billing interval"
               value={interval}
-              onValueChange={v => setInterval(v as 'monthly' | 'annual')}
-              items={[
+              onChange={v => setInterval(v as 'monthly' | 'annual')}
+              options={[
                 { value: 'monthly', label: 'Monthly' },
                 { value: 'annual', label: `Annual · save ~${ANNUAL_SAVINGS.pro}%` },
               ]}

@@ -29,18 +29,6 @@ const REGISTERED_JOBS = [
   grokImagine,
 ]
 
-const observability = {
-  onEvent: (name: string, meta?: Record<string, unknown>) => {
-    // Safe metadata only: never prompts, params, URLs, or tokens.
-    console.info(`[fnf] ${name}`, {
-      model: meta?.model,
-      status: meta?.status,
-      code: meta?.code,
-      durationMs: meta?.durationMs,
-    })
-  },
-}
-
 /**
  * Build clients for one request. `confirmed` wires the SDK submission
  * confirmation gate: the browser modal sets it true; unconfirmed submits
@@ -61,7 +49,7 @@ export function createFnfClients(confirmed?: boolean) {
 
 /** Read-only clients (feed, cost, profile) — no confirmation gate involved. */
 export function createFnfReaders() {
-  const adapter = createWorkflowPlatformAdapter({ baseUrl: 'https://fnf.internal', observability })
+  const adapter = createWorkflowPlatformAdapter({ baseUrl: 'https://fnf.internal' })
   const jobs = createJobClient({ adapter, jobs: REGISTERED_JOBS })
   const media = createMediaClient({ mediaAdapter: adapter })
   const profile = createProfileClient({ profileAdapter: adapter })
@@ -99,10 +87,10 @@ export function toSafeGeneration(gen: unknown): SafeGeneration {
     jobSetId: g.jobSetId ? String(g.jobSetId) : g.job_set_id ? String(g.job_set_id) : undefined,
     model: String(g.model ?? g.type ?? 'unknown'),
     status: String(g.status ?? 'unknown'),
-    phase: getJobPhase(gen),
+    phase: getJobPhase(gen as never) as SafeGeneration['phase'],
     mediaType: inferMediaType(g),
-    previewUrl: getPreviewUrl(gen) ?? null,
-    rawUrl: getRawUrl(gen) ?? null,
+    previewUrl: getPreviewUrl(gen as never) ?? null,
+    rawUrl: getRawUrl(gen as never) ?? null,
     thumbnailUrl: typeof results.thumbnailUrl === 'string' ? (results.thumbnailUrl as string) : null,
     prompt,
     createdAt: typeof g.createdAt === 'string' ? (g.createdAt as string) : typeof g.created_at === 'string' ? (g.created_at as string) : null,

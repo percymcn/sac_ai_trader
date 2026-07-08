@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '@higgsfield/quanta/button'
-import { Tabs } from '@higgsfield/quanta/tabs'
+import { Segmented } from '../components/field-controls'
 import { Media } from '@higgsfield/quanta/media'
 import { PublicPage } from '../components/public-page'
 import { StructuredData } from '../components/structured-data'
@@ -83,10 +83,11 @@ function ExplorePage() {
           </p>
         </header>
 
-        <Tabs
+        <Segmented
+          ariaLabel="Sort gallery"
           value={sort}
-          onValueChange={v => setSort(v as 'top' | 'new')}
-          items={[
+          onChange={v => setSort(v as 'top' | 'new')}
+          options={[
             { value: 'top', label: 'Leaderboard' },
             { value: 'new', label: 'Newest' },
           ]}

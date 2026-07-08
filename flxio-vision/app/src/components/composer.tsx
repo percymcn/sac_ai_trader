@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Button } from '@higgsfield/quanta/button'
 import { Textarea } from '@higgsfield/quanta/textarea'
-import { Select } from '@higgsfield/quanta/select'
-import { Tabs } from '@higgsfield/quanta/tabs'
 import { Modal } from '@higgsfield/quanta/modal'
+import { Segmented, SelectField } from './field-controls'
 import { Loader } from '@higgsfield/quanta/loader'
 import { toast } from '@higgsfield/quanta/sonner'
 import Sparkles from '@/assets/icon-sparkles-soft.svg?react'
@@ -271,26 +270,27 @@ export function Composer({
       className="grid gap-4 rounded-lg border border-q-border-subtle bg-q-background-secondary p-4 md:p-5"
     >
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <Tabs
+        <Segmented
+          ariaLabel="Media kind"
           value={kind}
-          onValueChange={v => switchKind(v as MediaKind)}
-          items={[
+          onChange={v => switchKind(v as MediaKind)}
+          options={[
             { value: 'video', label: 'Video' },
             { value: 'image', label: 'Image' },
           ]}
         />
         <div className="flex flex-wrap items-center gap-2">
-          <Select
-            aria-label="Engine"
+          <SelectField
+            ariaLabel="Engine"
             value={modelId}
-            onValueChange={switchModel}
-            items={kindModels.map(m => ({ value: m.id, label: m.name }))}
+            onChange={switchModel}
+            options={kindModels.map(m => ({ value: m.id, label: m.name }))}
           />
-          <Select
-            aria-label="Director preset"
+          <SelectField
+            ariaLabel="Director preset"
             value={presetSlug ?? 'none'}
-            onValueChange={v => pickPreset(v === 'none' ? null : v)}
-            items={[
+            onChange={v => pickPreset(v === 'none' ? null : v)}
+            options={[
               { value: 'none', label: 'No preset — raw prompt' },
               ...kindPresets.map(p => ({ value: p.slug, label: `${p.name}${p.core ? '' : ' · Pro'}` })),
             ]}
@@ -327,15 +327,15 @@ export function Composer({
         {model.settings.map(s => (
           <div key={s.key} className="grid gap-1">
             <span className="text-q-caption-sm-medium text-q-text-tertiary">{s.label}</span>
-            <Select
-              aria-label={s.label}
+            <SelectField
+              ariaLabel={s.label}
               value={String(settings[s.key] ?? s.default)}
-              onValueChange={v => {
+              onChange={v => {
                 const typed = typeof s.default === 'number' ? Number(v) : v
                 setSettings(prev => ({ ...prev, [s.key]: typed }))
                 setCost(null)
               }}
-              items={s.values.map(v => ({ value: String(v), label: String(v) }))}
+              options={s.values.map(v => ({ value: String(v), label: String(v) }))}
             />
           </div>
         ))}

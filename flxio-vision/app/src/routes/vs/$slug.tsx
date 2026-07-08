@@ -169,7 +169,7 @@ function VsDetailPage() {
               </li>
             ))}
             <li>
-              <Link to="/best/higgsfield-alternative" className="text-q-body-md-regular text-q-text-primary underline underline-offset-4 hover:text-q-text-secondary">
+              <Link to="/best/$slug" params={{ slug: 'higgsfield-alternative' }} className="text-q-body-md-regular text-q-text-primary underline underline-offset-4 hover:text-q-text-secondary">
                 Best Higgsfield alternatives
               </Link>
             </li>
