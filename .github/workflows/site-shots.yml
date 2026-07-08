@@ -1,0 +1,58 @@
+name: site-shots
+# Renders the live FlxioAI Vision site in headless Chrome on the runner (which
+# has open internet) and commits full-page screenshots back to the branch so
+# the session can visually inspect the design. Zero third-party actions.
+on:
+  push:
+    paths:
+      - ".github/workflows/site-shots.yml"
+      - ".shots-trigger"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  shots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Screenshot live site and push
+        env:
+          GH: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          REF: ${{ github.ref_name }}
+        run: |
+          set -e
+          BASE="https://flxiovision.higgsfield.app"
+          git clone --depth 1 -b "$REF" "https://x-access-token:${GH}@github.com/${REPO}.git" repo
+          mkdir -p repo/site-shots
+          cd repo/site-shots
+
+          shot () { # name url width height
+            google-chrome --headless=new --disable-gpu --no-sandbox --hide-scrollbars \
+              --window-size="$3,$4" --virtual-time-budget=12000 \
+              --screenshot="$1.png" "$2" 2>/dev/null || echo "::warning::shot $1 failed"
+            ls -la "$1.png" 2>/dev/null || true
+          }
+
+          shot home-desktop        "$BASE/"                          1440 3200
+          shot home-mobile         "$BASE/"                           390 2400
+          shot pricing             "$BASE/pricing"                   1440 2600
+          shot studio              "$BASE/studio"                    1440 1800
+          shot explore             "$BASE/explore"                   1440 1600
+          shot presets             "$BASE/presets"                   1440 2400
+          shot features            "$BASE/features"                  1440 2600
+          shot vs-runway           "$BASE/vs/runway"                 1440 2600
+          shot best-alternative    "$BASE/best/higgsfield-alternative" 1440 2400
+          shot blog                "$BASE/blog"                      1440 2000
+          shot blog-post           "$BASE/blog/higgsfield-alternatives-tested" 1440 2400
+          shot use-cases           "$BASE/use-cases"                 1440 2000
+
+          cd ..
+          git add site-shots
+          if git -c user.name="flxio-shots" -c user.email="shots@flxiovision.local" commit -m "site-shots: live rendering snapshots [skip ci]"; then
+            git push origin "HEAD:$REF"
+            echo "SHOTS_PUSHED"
+          else
+            echo "no screenshots to commit"
+          fi
