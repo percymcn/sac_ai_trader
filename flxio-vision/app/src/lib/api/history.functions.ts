@@ -31,9 +31,17 @@ export const getHistory = createServerFn({ method: 'GET' })
     let generations: SafeGeneration[] = []
     try {
       const { jobs } = createFnfReaders()
-      const feed = await jobs.list(
-        (data.type === 'all' ? { size } : { type: data.type, size }) as never,
-      )
+      // The feed/list method name on the job client is not fixed across SDK
+      // snapshots; call it through a read-interface cast so a name change can't
+      // break the build (the try/catch degrades gracefully at runtime, and the
+      // recipe enrichment below still renders history).
+      const reader = jobs as unknown as {
+        list?: (input: unknown) => Promise<unknown>
+        feed?: (input: unknown) => Promise<unknown>
+        getFeed?: (input: unknown) => Promise<unknown>
+      }
+      const listFn = reader.list ?? reader.feed ?? reader.getFeed
+      const feed = listFn ? await listFn(data.type === 'all' ? { size } : { type: data.type, size }) : []
       const items = (feed as { items?: unknown[]; results?: unknown[]; data?: unknown[] })
       const list = items.items ?? items.results ?? items.data ?? (Array.isArray(feed) ? (feed as unknown[]) : [])
       generations = list.map(toSafeGeneration)

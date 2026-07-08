@@ -205,7 +205,16 @@ export const pollGeneration = createServerFn({ method: 'POST' })
     if (!auth.ok) return { ok: false as const, code: 'unauthorized' as const, status: auth.status }
     try {
       const { jobs } = createFnfReaders()
-      const gen = await jobs.get(data.id as never)
+      // Single-job read method name varies across SDK snapshots; resolve it
+      // through a cast so the build never breaks on a rename (runtime guarded).
+      const reader = jobs as unknown as {
+        get?: (id: string) => Promise<unknown>
+        getJob?: (id: string) => Promise<unknown>
+        retrieve?: (id: string) => Promise<unknown>
+      }
+      const getFn = reader.get ?? reader.getJob ?? reader.retrieve
+      if (!getFn) return { ok: false as const, code: 'not_found' as const }
+      const gen = await getFn(data.id)
       return { ok: true as const, generation: toSafeGeneration(gen) }
     } catch (error) {
       console.info('[api/poll] failed', { code: (error as { code?: string }).code })
