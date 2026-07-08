@@ -50,6 +50,21 @@ token from the platform's website_repo_access tool), then deploy.
 4. Redeploy. The same upgrade buttons now route through Stripe Checkout and
    the billing portal handles cards/invoices/cancellation.
 
+## Feature-parity build (during/right after deploy — see FEATURE-PARITY.md)
+Wire the SDK-backed tools into the existing studio as new composer modes. They
+are documented fnf jobs, so the deploy agent registers them in
+`lib/fnf.server.ts` after typechecking exact export/id names against
+`app/packages/fnf/ai/AGENTS.md`:
+1. **Enhance/upscale** (topaz image/video, sora-enhance) — one-click enhance of
+   any history shot; the lowest-risk first parity win.
+2. **Remove background** — transparent-PNG cutout action on image results.
+3. **Reframe + outpaint** — re-crop to social ratios / expand canvas.
+4. **Motion control** — reference-motion transfer, saved as a remixable recipe.
+Then the net-new screens (own routes + D1): **Characters** (consistent identity),
+**Talking-head + Voice**, **Audio/music**, **3D export**, **Virality predictor**,
+**Projects** (multi-shot storyboard→cut). Each ships with the standard twist:
+cost preview, editable recipe, board, and share page.
+
 ## Punch list (post-launch expansion, in priority order)
 1. **OG capsule mask** — compose the stadium-capsule OG variant of the cover
    (scripts in the platform docs; needs CDN egress) and set it as
