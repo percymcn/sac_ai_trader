@@ -80,6 +80,19 @@ def main() -> None:
         copied += 1
     print(f"copied {copied} overlay files")
 
+    # 1a. Remove conflicting sitemap/robots route files. Our canonical files are
+    # the escaped-dot names `sitemap[.]xml.ts` / `robots[.]txt.ts` (route paths
+    # /sitemap.xml and /robots.txt). Older overlay pushes used unescaped names
+    # (which route to /sitemap/xml), and the template may ship its own variants;
+    # any file other than ours would either shadow the real path or collide.
+    routes_dir = platform_app / "src/routes"
+    keep = {"sitemap[.]xml.ts", "robots[.]txt.ts"}
+    if routes_dir.is_dir():
+        for p in list(routes_dir.iterdir()):
+            if p.is_file() and (p.name.startswith("sitemap") or p.name.startswith("robots")) and p.name not in keep:
+                p.unlink()
+                print(f"removed conflicting route file: {p.name}")
+
     # 1b. Remove template layouts. The starter ships src/layouts/*.tsx demo
     # layouts that import a `.Action`-style Composer API we don't expose; they
     # aren't referenced by any of our routes, so drop them to keep typecheck

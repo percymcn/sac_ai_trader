@@ -7,8 +7,9 @@ export interface BrowserUser {
 
 export async function fetchCurrentUser(): Promise<BrowserUser | null> {
   const res = await fetch('/api/user', { credentials: 'include' })
-  if (res.status === 401) return null
-  if (!res.ok) throw new Error('Failed to load user')
+  // Any 4xx/5xx means "no usable identity" — treat as signed-out so anonymous
+  // visitors get the sign-in UI rather than an error state.
+  if (!res.ok) return null
   return res.json() as Promise<BrowserUser>
 }
 

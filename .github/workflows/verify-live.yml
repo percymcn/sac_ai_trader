@@ -16,36 +16,45 @@ jobs:
       - name: Verify live site
         run: |
           BASE="https://flxiovision.higgsfield.app"
-          paths="/ /pricing /features /use-cases /about /contact /blog /explore /studio /billing /vs /vs/runway /vs/kling /best/higgsfield-alternative /best/ai-video-generator /use-cases/music-videos /blog/higgsfield-alternatives /answers /presets /sitemap.xml /robots.txt /r/nonexistent-id /login"
+          C="curl -s --compressed --max-time 30"
+          paths="/ /pricing /features /use-cases /about /contact /blog /explore /studio /billing /vs /vs/runway /vs/kling /best/higgsfield-alternative /best/ai-video-generator /use-cases/music-artists /blog/higgsfield-alternatives-tested /answers /presets /models /sitemap.xml /robots.txt /r/nonexistent-id"
           echo "== STATUS CODES =="
-          fail=0
           for p in $paths; do
             code=$(curl -s -o /dev/null -w "%{http_code}" -L --max-time 30 "$BASE$p")
             echo "$code  $p"
           done
 
           echo "== HOMEPAGE HEAD =="
-          curl -s --max-time 30 "$BASE/" | tr '>' '>\n' | grep -iE '<title|og:|twitter:|description|canonical|ld\+json' | head -40 || true
+          $C "$BASE/" | tr '>' '>\n' | grep -iE '<title|og:|twitter:|name="description"|canonical' | head -30 || true
 
           echo "== HOMEPAGE JSON-LD =="
-          curl -s --max-time 30 "$BASE/" | grep -o '<script type="application/ld+json">[^<]*' | head -5 | cut -c1-400 || true
-
-          echo "== SITEMAP (first 30 lines) =="
-          curl -s --max-time 30 "$BASE/sitemap.xml" | head -30
+          $C "$BASE/" | grep -o '<script type="application/ld+json">[^<]*' | cut -c41-340 || true
 
           echo "== SITEMAP URL COUNT =="
-          curl -s --max-time 30 "$BASE/sitemap.xml" | grep -c '<loc>' || true
+          $C "$BASE/sitemap.xml" | grep -c '<loc>' || true
 
-          echo "== ROBOTS.TXT =="
-          curl -s --max-time 30 "$BASE/robots.txt"
+          echo "== SITEMAP SAMPLE =="
+          $C "$BASE/sitemap.xml" | grep '<loc>' | sed -n '1p;20p;40p;60p;80p;100p;120p'
 
-          echo "== PRICING HEAD =="
-          curl -s --max-time 30 "$BASE/pricing" | tr '>' '>\n' | grep -iE '<title|description"|canonical' | head -6 || true
+          echo "== ROBOTS.TXT (tail) =="
+          $C "$BASE/robots.txt" | tail -10
 
-          echo "== VS RUNWAY: title + h1-ish =="
-          curl -s --max-time 30 "$BASE/vs/runway" | tr '>' '>\n' | grep -iE '<title|og:title' | head -4 || true
+          echo "== PRICING TITLE =="
+          $C "$BASE/pricing" | tr '>' '>\n' | grep -iE '<title|"description"' | head -4 || true
 
-          echo "== TRAILING SLASH REDIRECT CHECK =="
+          echo "== VS RUNWAY TITLE =="
+          $C "$BASE/vs/runway" | tr '>' '>\n' | grep -iE '<title' | head -2 || true
+
+          echo "== BEST PAGE TITLE =="
+          $C "$BASE/best/higgsfield-alternative" | tr '>' '>\n' | grep -iE '<title' | head -2 || true
+
+          echo "== BLOG POST TITLE =="
+          $C "$BASE/blog/higgsfield-alternatives-tested" | tr '>' '>\n' | grep -iE '<title' | head -2 || true
+
+          echo "== R PAGE (nonexistent) BODY SNIPPET =="
+          $C "$BASE/r/nonexistent-id" | tr '>' '>\n' | grep -iE '<title|not.?found|noindex' | head -5 || true
+
+          echo "== TRAILING SLASH REDIRECT =="
           curl -s -o /dev/null -w "%{http_code} -> %{redirect_url}\n" --max-time 30 "$BASE/pricing/"
 
           echo "== AUTH LOGIN REDIRECT =="
@@ -56,5 +65,8 @@ jobs:
 
           echo "== 404 PAGE =="
           curl -s -o /dev/null -w "%{http_code}\n" --max-time 30 "$BASE/this-page-does-not-exist"
+
+          echo "== MOBILE VIEWPORT META =="
+          $C "$BASE/" | grep -o 'name="viewport"[^>]*' | head -1 || true
 
           echo "VERIFY_DONE"

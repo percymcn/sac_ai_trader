@@ -44,7 +44,7 @@ function staticUrls(): SitemapUrl[] {
   return urls
 }
 
-export const Route = createFileRoute('/sitemap')({
+export const Route = createFileRoute('/sitemap.xml')({
   server: {
     handlers: {
       GET: async ({ request }) => {
