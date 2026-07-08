@@ -25,34 +25,34 @@ jobs:
           done
 
           echo "== HOMEPAGE HEAD =="
-          $C "$BASE/" | tr '>' '>\n' | grep -iE '<title|og:|twitter:|name="description"|canonical' | head -30 || true
+          $C "$BASE/" | tr '>' '>\n' | grep -a -iE '<title|og:|twitter:|name="description"|canonical' | head -30 || true
 
           echo "== HOMEPAGE JSON-LD =="
-          $C "$BASE/" | grep -o '<script type="application/ld+json">[^<]*' | cut -c41-340 || true
+          $C "$BASE/" | grep -a -o '<script type="application/ld+json">[^<]*' | cut -c41-340 || true
 
           echo "== SITEMAP URL COUNT =="
-          $C "$BASE/sitemap.xml" | grep -c '<loc>' || true
+          $C "$BASE/sitemap.xml" | grep -a -c '<loc>' || true
 
           echo "== SITEMAP SAMPLE =="
-          $C "$BASE/sitemap.xml" | grep '<loc>' | sed -n '1p;20p;40p;60p;80p;100p;120p'
+          $C "$BASE/sitemap.xml" | grep -a '<loc>' | sed -n '1p;20p;40p;60p;80p;100p;120p'
 
           echo "== ROBOTS.TXT (tail) =="
           $C "$BASE/robots.txt" | tail -10
 
           echo "== PRICING TITLE =="
-          $C "$BASE/pricing" | tr '>' '>\n' | grep -iE '<title|"description"' | head -4 || true
+          $C "$BASE/pricing" | tr '>' '>\n' | grep -a -iE '<title|"description"' | head -4 || true
 
           echo "== VS RUNWAY TITLE =="
-          $C "$BASE/vs/runway" | tr '>' '>\n' | grep -iE '<title' | head -2 || true
+          $C "$BASE/vs/runway" | tr '>' '>\n' | grep -a -iE '<title' | head -2 || true
 
           echo "== BEST PAGE TITLE =="
-          $C "$BASE/best/higgsfield-alternative" | tr '>' '>\n' | grep -iE '<title' | head -2 || true
+          $C "$BASE/best/higgsfield-alternative" | tr '>' '>\n' | grep -a -iE '<title' | head -2 || true
 
           echo "== BLOG POST TITLE =="
-          $C "$BASE/blog/higgsfield-alternatives-tested" | tr '>' '>\n' | grep -iE '<title' | head -2 || true
+          $C "$BASE/blog/higgsfield-alternatives-tested" | tr '>' '>\n' | grep -a -iE '<title' | head -2 || true
 
           echo "== R PAGE (nonexistent) BODY SNIPPET =="
-          $C "$BASE/r/nonexistent-id" | tr '>' '>\n' | grep -iE '<title|not.?found|noindex' | head -5 || true
+          $C "$BASE/r/nonexistent-id" | tr '>' '>\n' | grep -a -iE '<title|not.?found|noindex' | head -5 || true
 
           echo "== TRAILING SLASH REDIRECT =="
           curl -s -o /dev/null -w "%{http_code} -> %{redirect_url}\n" --max-time 30 "$BASE/pricing/"
@@ -67,6 +67,6 @@ jobs:
           curl -s -o /dev/null -w "%{http_code}\n" --max-time 30 "$BASE/this-page-does-not-exist"
 
           echo "== MOBILE VIEWPORT META =="
-          $C "$BASE/" | grep -o 'name="viewport"[^>]*' | head -1 || true
+          $C "$BASE/" | grep -a -o 'name="viewport"[^>]*' | head -1 || true
 
           echo "VERIFY_DONE"
